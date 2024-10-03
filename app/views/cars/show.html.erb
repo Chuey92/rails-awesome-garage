@@ -1,0 +1,35 @@
+<h1><%= @car.brand %> <%= @car.model %> - Details</h1>
+<p><strong>Year:</strong> <%= @car.year %></p>
+<p><strong>Fuel Type:</strong> <%= @car.fuel %></p>
+
+<div class="my-4">
+  <%= link_to 'Back to All Cars', cars_path, class: 'btn btn-secondary' %>
+</div>
+
+<h2>Reviews</h2>
+<% if @car.reviews.any? %>
+  <% @car.reviews.each do |review| %>
+    <div class="review-item mb-3">
+      <p><strong>Rating:</strong> <%= review.rating %> / 10</p>
+      <p><%= review.comment %></p>
+    </div>
+  <% end %>
+<% else %>
+  <p>No reviews yet. Be the first to add one!</p>
+<% end %>
+
+<h3>Add a Review</h3>
+<%= simple_form_for([@car, @car.reviews.build]) do |f| %>
+  <div class="form-group">
+    <%= f.input :rating, label: "Rating (0-10)" %>
+    <%= f.input :comment, label: "Comment" %>
+  </div>
+  <%= f.button :submit, "Submit Review", class: 'btn btn-primary' %>
+<% end %>
+
+<h3>Favorite this Car</h3>
+<% if @car.favorites.exists? %>
+  <p>This car is already in your garage.</p>
+<% else %>
+  <%= button_to 'Add to My Garage', favorites_path(car_id: @car.id), method: :post, class: 'btn btn-success' %>
+<% end %>
